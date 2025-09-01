@@ -1,0 +1,53 @@
+const CAR_STATUS = Object.freeze({
+  AVAILABLE:   'AVAILABLE',
+  RESERVED:    'RESERVED',
+  MAINTENANCE: 'MAINTENANCE',
+});
+
+const RESERVATION_STATUS = Object.freeze({
+  PENDING:   'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+});
+
+const PAYMENT_STATUS = Object.freeze({
+  PENDING:   'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED:    'FAILED',
+  REFUNDED:  'REFUNDED',
+});
+
+const PAYMENT_METHOD = Object.freeze({
+  CASH:   'CASH',
+  BANK:   'BANK',
+  ONLINE: 'ONLINE',
+});
+
+const FUEL_TYPE = Object.freeze({
+  PETROL:   'PETROL',
+  DIESEL:   'DIESEL',
+  ELECTRIC: 'ELECTRIC',
+  HYBRID:   'HYBRID',
+  LPG:      'LPG',
+});
+
+const TRANSMISSION = Object.freeze({
+  MANUAL:    'MANUAL',
+  AUTOMATIC: 'AUTOMATIC',
+});
+
+const USER_ROLE = Object.freeze({
+  OWNER: 'OWNER',
+  STAFF: 'STAFF',
+});
+
+module.exports = {
+  CAR_STATUS,
+  RESERVATION_STATUS,
+  PAYMENT_STATUS,
+  PAYMENT_METHOD,
+  FUEL_TYPE,
+  TRANSMISSION,
+  USER_ROLE,
+};
