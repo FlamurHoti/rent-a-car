@@ -1,0 +1,157 @@
+// =============================================================================
+// Rent-a-Car SaaS - Kosovo MVP | Production-ready multi-tenant schema
+// SQLite + Prisma ORM | CUID primary keys, FKs with cascade rules
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// PostgreSQL in production (Neon), SQLite in local dev (change provider back if needed)
+
+// ============== COMPANIES (multi-tenant root) ==============
+
+model Company {
+  id                 String    @id @default(cuid())
+  name               String
+  businessNumber     String?   // Tax/business registration number
+  address            String?
+  phone              String?
+  email              String    @unique
+  subscriptionPlan   String?   @default("basic")  // e.g. basic, premium, enterprise
+  subscriptionExpiry DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  users        User[]
+  cars         Car[]
+  reservations Reservation[]
+  payments     Payment[]
+  activityLogs ActivityLog[]
+
+  @@index([email])
+  @@index([subscriptionExpiry])
+  @@map("companies")
+}
+
+// ============== USERS (email unique per company) ==============
+
+model User {
+  id         String   @id @default(cuid())
+  companyId  String
+  name       String
+  email      String   // unique per company (see @@unique below)
+  password   String   // bcrypt hashed
+  role       String   @default("STAFF") // OWNER | STAFF
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  activityLogs ActivityLog[]
+
+  @@unique([companyId, email])
+  @@index([companyId])
+  @@index([email])
+  @@map("users")
+}
+
+// ============== CARS ==============
+
+model Car {
+  id            String   @id @default(cuid())
+  companyId     String
+  brand         String
+  model         String
+  year          Int
+  plateNumber   String
+  imageUrl      String?
+  fuelType      String   // PETROL | DIESEL | ELECTRIC | HYBRID | LPG
+  transmission  String   // MANUAL | AUTOMATIC
+  pricePerDay   Float
+  status        String   @default("AVAILABLE") // AVAILABLE | RESERVED | MAINTENANCE
+  currentKm     Int        @default(0)
+  serviceDueKm  Int?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@unique([companyId, plateNumber])
+  @@index([companyId])
+  @@index([companyId, status])
+  @@map("cars")
+}
+
+// ============== RESERVATIONS ==============
+
+model Reservation {
+  id             String   @id @default(cuid())
+  companyId      String
+  carId          String
+  customerName   String
+  customerPhone  String
+  customerEmail  String?
+  startDate      DateTime
+  endDate        DateTime
+  totalPrice     Float
+  status         String   @default("PENDING") // PENDING | CONFIRMED | COMPLETED | CANCELLED
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  car      Car       @relation(fields: [carId], references: [id], onDelete: Restrict)
+  payments Payment[]
+
+  @@index([companyId])
+  @@index([carId])
+  @@index([companyId, startDate, endDate])
+  @@map("reservations")
+}
+
+// ============== PAYMENTS ==============
+
+model Payment {
+  id             String   @id @default(cuid())
+  reservationId  String
+  companyId      String   // multi-tenant
+  amount         Float
+  method         String   // CASH | BANK | ONLINE
+  status         String   @default("PENDING") // PENDING | COMPLETED | FAILED | REFUNDED
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  reservation Reservation  @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([reservationId])
+  @@map("payments")
+}
+
+// ============== ACTIVITY LOGS ==============
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  companyId String
+  userId    String
+  action    String   // e.g. "car_added", "reservation_created", "car_deleted"
+  entityType String? // optional: "car", "reservation", "payment"
+  entityId  String?
+  details   String?  // optional JSON string
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([companyId, createdAt])
+  @@map("activity_logs")
+}
