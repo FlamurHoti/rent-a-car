@@ -1,0 +1,36 @@
+/* Fallback so styles apply even if Tailwind is slow or cache is stale */
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tailwind layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased bg-slate-50 text-slate-900 font-sans text-base;
+  }
+}
+
+@layer components {
+  .input-field {
+    @apply w-full mt-1.5 px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400
+           shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition duration-200;
+  }
+  .btn-base {
+    @apply inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-500 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .text-display {
+    @apply text-3xl sm:text-4xl font-bold leading-tight;
+  }
+  .text-h3 {
+    @apply text-lg font-semibold leading-snug;
+  }
+}
