@@ -13,16 +13,18 @@ export function AuthProvider({ children }) {
       setLoading(false);
       return;
     }
+    const controller = new AbortController();
     api
-      .get('/auth/me')
-      .then((res) => {
-        setUser(res.data.user);
-      })
-      .catch(() => {
+      .get('/auth/me', { signal: controller.signal })
+      .then((res) => setUser(res.data.user))
+      .catch((err) => {
+        if (err.name === 'CanceledError') return;
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       })
       .finally(() => setLoading(false));
+
+    return () => controller.abort();
   }, []);
 
   const login = async (email, password) => {

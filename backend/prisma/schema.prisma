@@ -8,11 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
-
-// PostgreSQL in production (Neon), SQLite in local dev (change provider back if needed)
 
 // ============== COMPANIES (multi-tenant root) ==============
 
@@ -112,6 +110,7 @@ model Reservation {
   @@index([companyId])
   @@index([carId])
   @@index([companyId, startDate, endDate])
+  @@index([carId, status, startDate, endDate])
   @@map("reservations")
 }
 

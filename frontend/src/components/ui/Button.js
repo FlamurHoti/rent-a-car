@@ -2,13 +2,13 @@ import React from 'react';
 
 const variants = {
   primary:
-    'bg-primary-500 hover:bg-primary-600 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] focus:ring-primary-500',
+    'bg-primary-500 hover:bg-primary-600 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] active:scale-[0.98] focus:ring-primary-500',
   secondary:
-    'bg-secondary-800 hover:bg-secondary-900 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] focus:ring-slate-600',
+    'bg-secondary-800 hover:bg-secondary-900 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] active:scale-[0.98] focus:ring-slate-600',
   danger:
-    'bg-red-600 hover:bg-red-700 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] focus:ring-red-500',
+    'bg-red-600 hover:bg-red-700 text-white shadow-button hover:shadow-button-hover hover:scale-[1.02] active:scale-[0.98] focus:ring-red-500',
   ghost:
-    'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-300 focus:ring-slate-400',
+    'bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-300 active:scale-[0.98] focus:ring-slate-400',
   link:
     'bg-transparent text-primary-500 hover:text-primary-600 underline-offset-2 hover:underline shadow-none',
 };
@@ -36,6 +36,7 @@ export default function Button({
         btn-base
         ${variants[variant] || variants.primary}
         ${sizes[size] || sizes.md}
+        transition-all duration-200
         ${className}
       `}
       {...props}

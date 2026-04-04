@@ -1,22 +1,22 @@
 const express = require('express');
 const { body } = require('express-validator');
-const paymentController = require('../controllers/paymentController');
+const ctrl = require('../controllers/paymentController');
 const { authenticate, requireRole } = require('../middlewares/auth');
+const validate = require('../middlewares/validateRequest');
+const wrap = require('../middlewares/asyncHandler');
 
 const router = express.Router();
-
 router.use(authenticate);
 
-router.get('/', paymentController.list);
-router.get('/:id', paymentController.getById);
-router.post('/', [
+router.get('/', wrap(ctrl.list));
+router.get('/:id', wrap(ctrl.getById));
+router.post('/', requireRole('OWNER'), [
   body('reservationId').notEmpty(),
-  body('amount').isFloat({ min: 0 }),
+  body('amount').isFloat({ min: 0.01, max: 999999 }),
   body('method').isIn(['CASH', 'BANK', 'ONLINE']),
-], paymentController.create);
-// Only OWNER can mark payment as completed (enforced in controller if you want; here we allow STAFF to update other statuses, OWNER for COMPLETED)
-router.patch('/:id', [
+], validate, wrap(ctrl.create));
+router.patch('/:id', requireRole('OWNER'), [
   body('status').isIn(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED']),
-], paymentController.update);
+], validate, wrap(ctrl.update));
 
 module.exports = router;

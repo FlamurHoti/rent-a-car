@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../api/client';
+import { Loader } from '../../components/Icons';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
 import { FUEL_OPTIONS, TRANS_OPTIONS, STATUS_OPTIONS } from '../../constants';
-
-
-
-
 
 const initial = {
   brand: '',
@@ -33,24 +30,21 @@ export default function CarForm() {
 
   useEffect(() => {
     if (!isEdit) return;
-    api.get(`/cars/${id}`)
+    const controller = new AbortController();
+    api.get(`/cars/${id}`, { signal: controller.signal })
       .then((res) => {
         const c = res.data;
         setForm({
-          brand: c.brand,
-          model: c.model,
-          year: c.year,
-          plateNumber: c.plateNumber,
-          fuelType: c.fuelType,
-          transmission: c.transmission,
-          pricePerDay: String(c.pricePerDay),
-          status: c.status,
+          brand: c.brand, model: c.model, year: c.year, plateNumber: c.plateNumber,
+          fuelType: c.fuelType, transmission: c.transmission,
+          pricePerDay: String(c.pricePerDay), status: c.status,
           currentKm: c.currentKm ?? 0,
           serviceDueKm: c.serviceDueKm != null ? String(c.serviceDueKm) : '',
           imageUrl: c.imageUrl || '',
         });
       })
-      .catch(() => setError('Car not found'));
+      .catch((err) => { if (err.name !== 'CanceledError') setError('Car not found'); });
+    return () => controller.abort();
   }, [id, isEdit]);
 
   const handleChange = (e) => {
@@ -81,13 +75,13 @@ export default function CarForm() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-display font-bold text-slate-900">{isEdit ? 'Edit car' : 'Add car'}</h1>
-      <Card className="max-w-2xl">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <h1 className="text-display font-bold text-slate-900 animate-fade-in-up">{isEdit ? 'Edit car' : 'Add car'}</h1>
+      <Card className="max-w-2xl animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <form onSubmit={handleSubmit} className="space-y-6 stagger-form">
           {error && (
-            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{error}</div>
+            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 animate-fade-in">{error}</div>
           )}
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 animate-fade-in-up">
             <label className="block">
               <span className="text-sm font-medium text-slate-700">Brand</span>
               <input name="brand" value={form.brand} onChange={handleChange} required className="input-field" />
@@ -97,7 +91,7 @@ export default function CarForm() {
               <input name="model" value={form.model} onChange={handleChange} required className="input-field" />
             </label>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 animate-fade-in-up">
             <label className="block">
               <span className="text-sm font-medium text-slate-700">Year</span>
               <input name="year" type="number" min="1990" max="2030" value={form.year} onChange={handleChange} className="input-field" />
@@ -107,7 +101,7 @@ export default function CarForm() {
               <input name="plateNumber" value={form.plateNumber} onChange={handleChange} required className="input-field" />
             </label>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 animate-fade-in-up">
             <label className="block">
               <span className="text-sm font-medium text-slate-700">Fuel type</span>
               <select name="fuelType" value={form.fuelType} onChange={handleChange} className="input-field">
@@ -121,9 +115,9 @@ export default function CarForm() {
               </select>
             </label>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 animate-fade-in-up">
             <label className="block">
-              <span className="text-sm font-medium text-slate-700">Price per day (€)</span>
+              <span className="text-sm font-medium text-slate-700">Price per day (&euro;)</span>
               <input name="pricePerDay" type="number" min="0" step="0.01" value={form.pricePerDay} onChange={handleChange} required className="input-field" />
             </label>
             <label className="block">
@@ -133,7 +127,7 @@ export default function CarForm() {
               </select>
             </label>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 animate-fade-in-up">
             <label className="block">
               <span className="text-sm font-medium text-slate-700">Current km</span>
               <input name="currentKm" type="number" min="0" value={form.currentKm} onChange={handleChange} className="input-field" />
@@ -143,16 +137,23 @@ export default function CarForm() {
               <input name="serviceDueKm" type="number" min="0" placeholder="Optional" value={form.serviceDueKm} onChange={handleChange} className="input-field" />
             </label>
           </div>
-          <label className="block">
+          <label className="block animate-fade-in-up">
             <span className="text-sm font-medium text-slate-700">Car image URL <span className="font-normal text-slate-400">(optional)</span></span>
             <input name="imageUrl" type="url" placeholder="https://..." value={form.imageUrl} onChange={handleChange} className="input-field" />
             {form.imageUrl && (
-              <img src={form.imageUrl} alt="preview" className="mt-2 h-32 w-full rounded-lg object-cover border border-slate-200" onError={(e) => { e.target.style.display = 'none'; }} />
+              <img src={form.imageUrl} alt="preview" className="mt-2 h-32 w-full rounded-lg object-cover border border-slate-200 animate-scale-in" onError={(e) => { e.target.style.display = 'none'; }} />
             )}
           </label>
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-2 animate-fade-in-up">
             <Button type="button" variant="secondary" onClick={() => navigate('/cars')}>Cancel</Button>
-            <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save'}</Button>
+            <Button type="submit" disabled={loading} className="gap-2">
+              {loading ? (
+                <>
+                  <Loader className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : 'Save'}
+            </Button>
           </div>
         </form>
       </Card>

@@ -16,21 +16,91 @@ body {
   body {
     @apply antialiased bg-slate-50 text-slate-900 font-sans text-base;
   }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better selection color */
+  ::selection {
+    @apply bg-primary-100 text-primary-900;
+  }
 }
 
 @layer components {
+  /* ━━━ FORM INPUTS ━━━ */
   .input-field {
-    @apply w-full mt-1.5 px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400
-           shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition duration-200;
+    @apply w-full mt-1.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400
+           focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-200;
   }
+  .input-field:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  }
+
+  /* ━━━ BUTTON BASE ━━━ */
   .btn-base {
-    @apply inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-500 disabled:opacity-60 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed;
   }
+
+  /* ━━━ TYPOGRAPHY ━━━ */
   .text-display {
-    @apply text-3xl sm:text-4xl font-bold leading-tight;
+    @apply text-3xl sm:text-4xl font-bold leading-tight tracking-tight;
   }
   .text-h3 {
     @apply text-lg font-semibold leading-snug;
+  }
+
+  /* ━━━ STAGGER DELAYS ━━━ */
+  .stagger-children > *:nth-child(1)  { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2)  { animation-delay: 60ms; }
+  .stagger-children > *:nth-child(3)  { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4)  { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5)  { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6)  { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7)  { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8)  { animation-delay: 420ms; }
+  .stagger-children > *:nth-child(9)  { animation-delay: 480ms; }
+  .stagger-children > *:nth-child(10) { animation-delay: 540ms; }
+  .stagger-children > *:nth-child(11) { animation-delay: 600ms; }
+  .stagger-children > *:nth-child(12) { animation-delay: 660ms; }
+
+  .stagger-form > *:nth-child(1)  { animation-delay: 0ms; }
+  .stagger-form > *:nth-child(2)  { animation-delay: 50ms; }
+  .stagger-form > *:nth-child(3)  { animation-delay: 100ms; }
+  .stagger-form > *:nth-child(4)  { animation-delay: 150ms; }
+  .stagger-form > *:nth-child(5)  { animation-delay: 200ms; }
+  .stagger-form > *:nth-child(6)  { animation-delay: 250ms; }
+  .stagger-form > *:nth-child(7)  { animation-delay: 300ms; }
+  .stagger-form > *:nth-child(8)  { animation-delay: 350ms; }
+  .stagger-form > *:nth-child(9)  { animation-delay: 400ms; }
+  .stagger-form > *:nth-child(10) { animation-delay: 450ms; }
+
+  /* ━━━ UTILITY CLASSES ━━━ */
+  .page-enter {
+    @apply animate-fade-in;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-accent-500;
+  }
+
+  .skeleton {
+    @apply bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 bg-[length:200%_100%] animate-shimmer rounded-lg;
+  }
+}
+
+/* ━━━ MOBILE SAFE AREAS ━━━ */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ━━━ ACCESSIBILITY ━━━ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

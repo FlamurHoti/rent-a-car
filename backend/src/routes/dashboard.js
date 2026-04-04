@@ -1,13 +1,13 @@
 const express = require('express');
-const dashboardController = require('../controllers/dashboardController');
+const ctrl = require('../controllers/dashboardController');
 const { authenticate } = require('../middlewares/auth');
+const wrap = require('../middlewares/asyncHandler');
 
 const router = express.Router();
-
 router.use(authenticate);
 
-router.get('/stats', dashboardController.getStats);
-router.get('/service-alerts', dashboardController.getServiceAlerts);
-router.get('/activity', dashboardController.getActivity);
+router.get('/stats', wrap(ctrl.getStats));
+router.get('/service-alerts', wrap(ctrl.getServiceAlerts));
+router.get('/activity', wrap(ctrl.getActivity));
 
 module.exports = router;
