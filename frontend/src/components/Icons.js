@@ -182,3 +182,33 @@ export function Gauge({ className }) {
     <svg {...svgProps(className)}><path d="m12 14 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32 0" /></svg>
   );
 }
+
+export function Zap({ className }) {
+  return (
+    <svg {...svgProps(className)}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+  );
+}
+
+export function HeartHandshake({ className }) {
+  return (
+    <svg {...svgProps(className)}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08v0c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg>
+  );
+}
+
+export function BadgeCheck({ className }) {
+  return (
+    <svg {...svgProps(className)}><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m9 12 2 2 4-4" /></svg>
+  );
+}
+
+export function MessageCircle({ className }) {
+  return (
+    <svg {...svgProps(className)}><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" /></svg>
+  );
+}
+
+export function Banknote({ className }) {
+  return (
+    <svg {...svgProps(className)}><rect width="20" height="12" x="2" y="6" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg>
+  );
+}

@@ -8,9 +8,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// VENDOSNI provider = "sqlite" per zhvillim lokal
+// VENDOSNI provider = "postgresql" per production (Neon)
 
 // ============== COMPANIES (multi-tenant root) ==============
 
