@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "build": "prisma generate && prisma db push",
+    "build": "prisma generate",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:migrate:status": "prisma migrate status",
+    "db:migrate:reset": "prisma migrate reset",
     "db:seed": "node prisma/seed.js",
-    "db:reset": "prisma db push --force-reset --skip-generate",
     "db:studio": "prisma studio",
     "test": "jest",
     "test:security": "jest tests/security --verbose"
